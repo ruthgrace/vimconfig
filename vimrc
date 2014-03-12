@@ -53,6 +53,65 @@ nnoremap <Up> :echoe "Use k"<CR>
 nnoremap <Down> :echoe "Use j"<CR>
 
 " ##############################################################################
+" # Bracket completion                                                         #
+" ##############################################################################
+
+inoremap ( ()<Esc>i
+inoremap [ []<Esc>i
+inoremap " ""<Esc>i
+inoremap ' ''<Esc>i
+inoremap ) <c-r>=ClosePair(')')<CR>
+inoremap ] <c-r>=ClosePair(']')<CR>
+inoremap { {<CR>}<Esc>O
+
+function ClosePair(char)
+ if getline('.')[col('.') - 1] == a:char
+ return "\<Right>"
+ else
+ return a:char
+ endif
+endf
+
+" ##############################################################################
+" # Omni completion                                                            #
+" ##############################################################################
+
+filetype plugin on
+set omnifunc=syntaxcomplete#Complete
+
+" ##############################################################################
+" # Auto completion with tab                                                   #
+" ##############################################################################
+
+" Re-map snippet completion to shift-tab
+:imap <S-Tab> <Plug>snipMateNextOrTrigger
+" Re-map snipMateBack (jumping to the previous tab stop)
+:imap <C-Tab> <Plug>snipMateBack
+
+function! Smart_TabComplete()
+  let line = getline('.')                         " current line
+
+  let substr = strpart(line, -1, col('.')+1)      " from the start of the current
+                                                  " line to one character right
+                                                  " of the cursor
+  let substr = matchstr(substr, "[^ \t]*$")       " word till cursor
+  if (strlen(substr)==0)                          " nothing to match on empty string
+    return "\<tab>"
+  endif
+  let has_period = match(substr, '\.') != -1      " position of period, if any
+  let has_slash = match(substr, '\/') != -1       " position of slash, if any
+  if (!has_period && !has_slash)
+    return "\<C-X>\<C-P>"                         " existing text matching
+  elseif ( has_slash )
+    return "\<C-X>\<C-F>"                         " file matching
+  else
+    return "\<C-X>\<C-O>"                         " plugin matching
+  endif
+endfunction
+
+inoremap <tab> <c-r>=Smart_TabComplete()<CR>
+
+" ##############################################################################
 " # Airline configuration                                                      #
 " ##############################################################################
 
@@ -141,4 +200,4 @@ endfunction
 " ##############################################################################
 
 " Skeleton for pom.xml
-"au BufNewFile pom.xml 0r ~/.vim/skel/skel.pom.xml
+au BufNewFile pom.xml 0r ~/.vim/skel/skel.pom.xml

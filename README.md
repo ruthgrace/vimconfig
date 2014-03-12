@@ -22,6 +22,9 @@ Install all bundles:
 vim +BundleInstall +qall
 ```
 
+RUTH ADDITION: install neocomplcache by following instructions from
+https://github.com/Shougo/neocomplcache.vim/blob/master/README.md
+
 Link `~/.vimrc` to `~/.vim/vimrc` (if necessary)
 
 ```bash
@@ -54,5 +57,7 @@ Some of the features of this configuration include:
     * `psvmte` - `public static void main(String[] args) throws Exception { }`
     * `sop` - `System.out.println("text");`
   * Additional snippets can be added to the `.vim/snippets` directory
+
+RUTH ADDITION - snippets are accessed by SHIFT-TAB, TAB is now simply autocomplete.
 
 * `Ctrl-p` file navigation
